@@ -2,8 +2,8 @@ package models
 
 type SMSDatum struct {
 	Country      string
-	Bandwidth    int
-	ResponseTime int
+	Bandwidth    string
+	ResponseTime string
 	Provider     string
 }
 

@@ -1,0 +1,92 @@
+[
+    {
+        "country": "RU",
+        "provider": "Topolo",
+        "bandwidth": "63",
+        "response_time": "257"
+    },
+    {
+        "country": "US",
+        "provider": "Rond",
+        "bandwidth": "60",
+        "response_time": "578"
+    },
+    {
+        "country": "GB",
+        "provider": "Topolo",
+        "bandwidth": "28",
+        "response_time": "1376"
+    },
+    {
+        "country": "FR",
+        "provider": "Topolo",
+        "bandwidth": "56",
+        "response_time": "1243"
+    },
+    {
+        "country": "BL",
+        "provider": "Kildy",
+        "bandwidth": "97",
+        "response_time": "141"
+    },
+    {
+        "country": "AT",
+        "provider": "Topolo",
+        "bandwidth": "46",
+        "response_time": "1717"
+    },
+    {
+        "country": "BG",
+        "provider": "Rond",
+        "bandwidth": "14",
+        "response_time": "796"
+    },
+    {
+        "country": "DK",
+        "provider": "Topolo",
+        "bandwidth": "69",
+        "response_time": "1836"
+    },
+    {
+        "country": "CA",
+        "provider": "Rond",
+        "bandwidth": "1",
+        "response_time": "640"
+    },
+    {
+        "country": "ES",
+        "provider": "Topolo",
+        "bandwidth": "76",
+        "response_time": "1114"
+    },
+    {
+        "country": "CH",
+        "provider": "Topolo",
+        "bandwidth": "90",
+        "response_time": "451"
+    },
+    {
+        "country": "TR",
+        "provider": "Rond",
+        "bandwidth": "13",
+        "response_time": "1871"
+    },
+    {
+        "country": "PE",
+        "provider": "Topolo",
+        "bandwidth": "29",
+        "response_time": "1923"
+    },
+    {
+        "country": "NZ",
+        "provider": "Kildy",
+        "bandwidth": "61",
+        "response_time": "560"
+    },
+    {
+        "country": "MC",
+        "provider": "Kildy",
+        "bandwidth": "48",
+        "response_time": "1715"
+    }
+]

@@ -3,6 +3,7 @@ package sms
 import (
 	"encoding/csv"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"skillbox-diploma/models"
@@ -10,10 +11,6 @@ import (
 	"strings"
 
 	"github.com/biter777/countries"
-)
-
-var (
-	approvedProviders = [3]string{"Topolo", "Rond", "Kildy"}
 )
 
 func Parse(data io.Reader) models.SMSData {
@@ -77,8 +74,8 @@ func convertRecordToSMSDatum(record []string) (*models.SMSDatum, error) {
 	// obtain and validate provider
 	provider := record[3]
 	found := false
-	for index := 0; index < len(approvedProviders); index++ {
-		if strings.EqualFold(provider, approvedProviders[index]) {
+	for index := 0; index < len(models.ApprovedProviders); index++ {
+		if strings.EqualFold(provider, models.ApprovedProviders[index]) {
 			found = true
 
 			break
@@ -91,8 +88,8 @@ func convertRecordToSMSDatum(record []string) (*models.SMSDatum, error) {
 
 	result := &models.SMSDatum{
 		Country:      country.Alpha2(),
-		Bandwidth:    bandwidth,
-		ResponseTime: responseTime,
+		Bandwidth:    fmt.Sprint(bandwidth),
+		ResponseTime: fmt.Sprint(responseTime),
 		Provider:     provider,
 	}
 
