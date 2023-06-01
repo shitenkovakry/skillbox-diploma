@@ -17,8 +17,12 @@ func Parse(data io.Reader) *models.BillingDatum {
 		return nil
 	}
 
-	firstLine := allLines[0]
-	encodedLine := encodeToLine([]byte(firstLine))
+	firstLine := []byte(allLines[0])
+	if len(firstLine) < 6 {
+		return nil
+	}
+
+	encodedLine := encodeToLine(firstLine)
 	result := &models.BillingDatum{}
 
 	if encodedLine[0] == true {
