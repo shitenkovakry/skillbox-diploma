@@ -1,0 +1,8 @@
+{
+    "create_customer": false,
+    "purchase": false,
+    "payout": false,
+    "recurring": true,
+    "fraud_control": true,
+    "checkout_page": true
+}
