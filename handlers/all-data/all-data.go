@@ -27,8 +27,13 @@ type SourceSMS interface {
 	Read() models.SMSData
 }
 
+type SourceMMS interface {
+	Read() models.MMSData
+}
+
 type Handler struct {
 	sms SourceSMS
+	mms SourceMMS
 }
 
 func (handler *Handler) sendResponse(writer http.ResponseWriter, result *ResultT) {
@@ -56,12 +61,14 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	}
 
 	result.Data.SMS = handler.obtainSMSData()
+	result.Data.MMS = handler.obtainMMSData()
 
 	handler.sendResponse(writer, result)
 }
 
-func New(sms SourceSMS) *Handler {
+func New(sms SourceSMS, mms SourceMMS) *Handler {
 	return &Handler{
 		sms: sms,
+		mms: mms,
 	}
 }

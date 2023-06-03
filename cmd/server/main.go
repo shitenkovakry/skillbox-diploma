@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"skillbox-diploma/datasources/mms"
 	"skillbox-diploma/datasources/sms"
 	alldata "skillbox-diploma/handlers/all-data"
 
@@ -10,16 +11,17 @@ import (
 )
 
 const (
-	addr = ":8383"
+	addr = ":8080"
 )
 
 func main() {
 	router := chi.NewRouter()
 
-	smsSource := sms.New("./skillbox/sms.data")
+	smsSource := sms.New("../../skillbox/sms.data")
+	mmsSource := mms.New("http://localhost:8383/mms")
 
-	handlerForAllData := alldata.New(smsSource)
-	router.Method(http.MethodGet, "/all/data", handlerForAllData)
+	handlerForAllData := alldata.New(smsSource, mmsSource)
+	router.Method(http.MethodGet, "/all-data", handlerForAllData)
 
 	server := NewServer(addr, router)
 

@@ -19,15 +19,21 @@ type MMS struct {
 	approvedProviders []string
 	url               string
 	client            http.Client
+	data              models.MMSData
 }
 
 func New(url string) *MMS {
 	// url = "http://localhost:8383/mms"
-	return &MMS{
+	mms := &MMS{
 		approvedProviders: models.ApprovedProviders[:],
 		url:               url,
 		client:            http.Client{},
+		data:              nil,
 	}
+
+	mms.data = mms.Load()
+
+	return mms
 }
 
 func (mms *MMS) convertRecordToMMSDatum(record *models.MMSDatum) (*models.MMSDatum, error) {
@@ -133,4 +139,14 @@ func (mms *MMS) Parse(data io.Reader) (models.MMSData, error) {
 	}
 
 	return mmsData, nil
+}
+
+func (mms *MMS) Read() models.MMSData {
+	data := make(models.MMSData, len(mms.data))
+
+	for i := 0; i < len(data); i++ {
+		data[i] = mms.data[i]
+	}
+
+	return data
 }
