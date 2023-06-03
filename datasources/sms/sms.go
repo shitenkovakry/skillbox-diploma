@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"skillbox-diploma/models"
 	"strconv"
 	"strings"
@@ -94,4 +95,31 @@ func convertRecordToSMSDatum(record []string) (*models.SMSDatum, error) {
 	}
 
 	return result, nil
+}
+
+type SMS struct {
+	data models.SMSData
+}
+
+func (sms *SMS) Read() models.SMSData {
+	data := make(models.SMSData, len(sms.data))
+
+	for i := 0; i < len(data); i++ {
+		data[i] = sms.data[i]
+	}
+
+	return data
+}
+
+func New(path string) *SMS {
+	smsFile, err := os.OpenFile(path, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		log.Fatalf("cannot open file %s: %v", path, err)
+	}
+
+	data := Parse(smsFile)
+
+	return &SMS{
+		data: data,
+	}
 }
