@@ -39,11 +39,16 @@ type SourceEmail interface {
 	Read() models.EmailData
 }
 
+type SourceBilling interface {
+	Read() *models.BillingDatum
+}
+
 type Handler struct {
 	sms       SourceSMS
 	mms       SourceMMS
 	voiceCall SourceVoiceCall
 	email     SourceEmail
+	billing   SourceBilling
 }
 
 func (handler *Handler) sendResponse(writer http.ResponseWriter, result *ResultT) {
@@ -74,15 +79,17 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	result.Data.MMS = handler.obtainMMSData()
 	result.Data.VoiceCall = handler.voiceCall.Read()
 	result.Data.Email = handler.obtainEmailData()
+	result.Data.Billing = handler.billing.Read()
 
 	handler.sendResponse(writer, result)
 }
 
-func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall, email SourceEmail) *Handler {
+func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall, email SourceEmail, billing SourceBilling) *Handler {
 	return &Handler{
 		sms:       sms,
 		mms:       mms,
 		voiceCall: voiceCall,
 		email:     email,
+		billing:   billing,
 	}
 }

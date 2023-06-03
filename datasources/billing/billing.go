@@ -2,6 +2,8 @@ package billing
 
 import (
 	"io"
+	"log"
+	"os"
 	"skillbox-diploma/models"
 	"strings"
 )
@@ -64,4 +66,25 @@ func encodeToLine(line []byte) []bool {
 	}
 
 	return result
+}
+
+type Billing struct {
+	data *models.BillingDatum
+}
+
+func (billing *Billing) Read() *models.BillingDatum {
+	return billing.data
+}
+
+func New(path string) *Billing {
+	billingFile, err := os.OpenFile(path, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		log.Fatalf("cannot open file %s: %v", path, err)
+	}
+
+	data := Parse(billingFile)
+
+	return &Billing{
+		data: data,
+	}
 }
