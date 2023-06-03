@@ -31,9 +31,14 @@ type SourceMMS interface {
 	Read() models.MMSData
 }
 
+type SourceVoiceCall interface {
+	Read() models.VoiceCallData
+}
+
 type Handler struct {
-	sms SourceSMS
-	mms SourceMMS
+	sms       SourceSMS
+	mms       SourceMMS
+	voiceCall SourceVoiceCall
 }
 
 func (handler *Handler) sendResponse(writer http.ResponseWriter, result *ResultT) {
@@ -62,13 +67,15 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 
 	result.Data.SMS = handler.obtainSMSData()
 	result.Data.MMS = handler.obtainMMSData()
+	result.Data.VoiceCall = handler.voiceCall.Read()
 
 	handler.sendResponse(writer, result)
 }
 
-func New(sms SourceSMS, mms SourceMMS) *Handler {
+func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall) *Handler {
 	return &Handler{
-		sms: sms,
-		mms: mms,
+		sms:       sms,
+		mms:       mms,
+		voiceCall: voiceCall,
 	}
 }

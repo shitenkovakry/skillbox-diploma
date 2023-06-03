@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 
@@ -137,4 +138,31 @@ func convertRecordToVoiceCallDatum(record []string) (*models.VoiceCallDatum, err
 	}
 
 	return result, nil
+}
+
+type VoiceCall struct {
+	data models.VoiceCallData
+}
+
+func (voiceCall *VoiceCall) Read() models.VoiceCallData {
+	data := make(models.VoiceCallData, len(voiceCall.data))
+
+	for i := 0; i < len(data); i++ {
+		data[i] = voiceCall.data[i]
+	}
+
+	return data
+}
+
+func New(path string) *VoiceCall {
+	voiceCallFile, err := os.OpenFile(path, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		log.Fatalf("cannot open file %s: %v", path, err)
+	}
+
+	data := Parse(voiceCallFile)
+
+	return &VoiceCall{
+		data: data,
+	}
 }
