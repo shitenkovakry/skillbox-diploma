@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io"
 	"log"
+	"os"
 	"skillbox-diploma/models"
 	"strconv"
 	"strings"
@@ -83,4 +84,31 @@ func convertRecordToEmailDatum(record []string) (*models.EmailDatum, error) {
 	}
 
 	return result, nil
+}
+
+type Email struct {
+	data models.EmailData
+}
+
+func (email *Email) Read() models.EmailData {
+	data := make(models.EmailData, len(email.data))
+
+	for i := 0; i < len(data); i++ {
+		data[i] = email.data[i]
+	}
+
+	return data
+}
+
+func New(path string) *Email {
+	emailFile, err := os.OpenFile(path, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		log.Fatalf("cannot open file %s: %v", path, err)
+	}
+
+	data := Parse(emailFile)
+
+	return &Email{
+		data: data,
+	}
 }
