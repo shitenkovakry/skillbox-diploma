@@ -17,10 +17,10 @@ type ResultSetT struct {
 	SMS       []models.SMSData     `json:"sms"`
 	MMS       []models.MMSData     `json:"mms"`
 	VoiceCall models.VoiceCallData `json:"voice_call"`
-	Email     []models.EmailData   `json:”email”`
-	Billing   *models.BillingDatum `json:”billing”`
-	Support   []int                `json:”support”`
-	Incidents models.IncidentData  `json:”incident”`
+	Email     []models.EmailData   `json:"email"`
+	Billing   *models.BillingDatum `json:"billing"`
+	Support   []int                `json:"support"`
+	Incidents models.IncidentData  `json:"incident"`
 }
 
 type SourceSMS interface {
@@ -43,12 +43,17 @@ type SourceBilling interface {
 	Read() *models.BillingDatum
 }
 
+type SourceIncidents interface {
+	Read() models.IncidentData
+}
+
 type Handler struct {
 	sms       SourceSMS
 	mms       SourceMMS
 	voiceCall SourceVoiceCall
 	email     SourceEmail
 	billing   SourceBilling
+	incidents SourceIncidents
 }
 
 func (handler *Handler) sendResponse(writer http.ResponseWriter, result *ResultT) {
@@ -80,16 +85,18 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	result.Data.VoiceCall = handler.voiceCall.Read()
 	result.Data.Email = handler.obtainEmailData()
 	result.Data.Billing = handler.billing.Read()
+	result.Data.Incidents = handler.incidents.Read()
 
 	handler.sendResponse(writer, result)
 }
 
-func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall, email SourceEmail, billing SourceBilling) *Handler {
+func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall, email SourceEmail, billing SourceBilling, incidents SourceIncidents) *Handler {
 	return &Handler{
 		sms:       sms,
 		mms:       mms,
 		voiceCall: voiceCall,
 		email:     email,
 		billing:   billing,
+		incidents: incidents,
 	}
 }

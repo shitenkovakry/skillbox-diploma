@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"skillbox-diploma/datasources/billing"
 	"skillbox-diploma/datasources/email"
+	"skillbox-diploma/datasources/incident"
 	"skillbox-diploma/datasources/mms"
 	"skillbox-diploma/datasources/sms"
 	voicecall "skillbox-diploma/datasources/voice-call"
@@ -25,8 +26,9 @@ func main() {
 	voiceCallSource := voicecall.New("../../skillbox/voice.data")
 	emailSource := email.New("../../skillbox/email.data")
 	billingSource := billing.New("../../skillbox/billing.data")
+	incidentSource := incident.New("http://localhost:8383/incident")
 
-	handlerForAllData := alldata.New(smsSource, mmsSource, voiceCallSource, emailSource, billingSource)
+	handlerForAllData := alldata.New(smsSource, mmsSource, voiceCallSource, emailSource, billingSource, incidentSource)
 	router.Method(http.MethodGet, "/all-data", handlerForAllData)
 
 	server := NewServer(addr, router)

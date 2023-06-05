@@ -14,15 +14,21 @@ type Incident struct {
 	approvedStatusForIncident []string
 	url                       string
 	client                    http.Client
+	data                      models.IncidentData
 }
 
 func New(url string) *Incident {
 	// url = "http://localhost:8383/incident"
-	return &Incident{
+	incident := &Incident{
 		approvedStatusForIncident: models.ApprovedStatusForIncident[:],
 		url:                       url,
 		client:                    http.Client{},
+		data:                      nil,
 	}
+
+	incident.data = incident.Load()
+
+	return incident
 }
 
 func (incident *Incident) Load() models.IncidentData {
@@ -108,4 +114,14 @@ func (incident *Incident) convertRecordToIncidentDatum(record *models.IncidentDa
 	}
 
 	return result, nil
+}
+
+func (incident *Incident) Read() models.IncidentData {
+	data := make(models.IncidentData, len(incident.data))
+
+	for i := 0; i < len(data); i++ {
+		data[i] = incident.data[i]
+	}
+
+	return data
 }
