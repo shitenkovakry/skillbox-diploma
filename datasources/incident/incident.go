@@ -117,9 +117,9 @@ func (incident *Incident) convertRecordToIncidentDatum(record *models.IncidentDa
 }
 
 func (incident *Incident) Read() models.IncidentData {
-	data := make(models.IncidentData, len(incident.data))
+	var data models.IncidentData
 
-	for i := 0; i < len(data); i++ {
+	for i := 0; i < len(incident.data); i++ {
 		data[i] = incident.data[i]
 	}
 

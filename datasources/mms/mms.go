@@ -142,9 +142,9 @@ func (mms *MMS) Parse(data io.Reader) (models.MMSData, error) {
 }
 
 func (mms *MMS) Read() models.MMSData {
-	data := make(models.MMSData, len(mms.data))
+	var data models.MMSData
 
-	for i := 0; i < len(data); i++ {
+	for i := 0; i < len(mms.data); i++ {
 		data[i] = mms.data[i]
 	}
 

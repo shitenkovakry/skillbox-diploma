@@ -102,9 +102,9 @@ type SMS struct {
 }
 
 func (sms *SMS) Read() models.SMSData {
-	data := make(models.SMSData, len(sms.data))
+	var data models.SMSData
 
-	for i := 0; i < len(data); i++ {
+	for i := 0; i < len(sms.data); i++ {
 		data[i] = sms.data[i]
 	}
 

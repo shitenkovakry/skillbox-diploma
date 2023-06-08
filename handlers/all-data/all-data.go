@@ -8,19 +8,19 @@ import (
 )
 
 type ResultT struct {
-	Status bool       `json:"status"` // true, если все этапы сбора данных прошли успешно, false во всех остальных случаях
-	Data   ResultSetT `json:"data"`   // заполнен, если все этапы сбора данных прошли успешно, nil во всех остальных случаях
-	Error  string     `json:"error"`  // пустая строка если все этапы сбора данных прошли успешно, в случае ошибки заполнено текстом ошибки (детали ниже)
+	Status bool        `json:"status,omitempty"` // true, если все этапы сбора данных прошли успешно, false во всех остальных случаях
+	Data   *ResultSetT `json:"data,omitempty"`   // заполнен, если все этапы сбора данных прошли успешно, nil во всех остальных случаях
+	Error  string      `json:"error,omitempty"`  // пустая строка если все этапы сбора данных прошли успешно, в случае ошибки заполнено текстом ошибки (детали ниже)
 }
 
 type ResultSetT struct {
-	SMS       []models.SMSData     `json:"sms"`
-	MMS       []models.MMSData     `json:"mms"`
-	VoiceCall models.VoiceCallData `json:"voice_call"`
-	Email     []models.EmailData   `json:"email"`
-	Billing   *models.BillingDatum `json:"billing"`
-	Support   []int                `json:"support"`
-	Incidents models.IncidentData  `json:"incident"`
+	SMS       []models.SMSData     `json:"sms,omitempty"`
+	MMS       []models.MMSData     `json:"mms,omitempty"`
+	VoiceCall models.VoiceCallData `json:"voice_call,omitempty"`
+	Email     []models.EmailData   `json:"email,omitempty"`
+	Billing   *models.BillingDatum `json:"billing,omitempty"`
+	Support   []int                `json:"support,omitempty"`
+	Incidents models.IncidentData  `json:"incident,omitempty"`
 }
 
 type SourceSMS interface {
@@ -76,8 +76,8 @@ func (handler *Handler) sendResponse(writer http.ResponseWriter, result *ResultT
 func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	result := &ResultT{
 		Status: false,
-		Data:   ResultSetT{},
-		Error:  "",
+		Data:   &ResultSetT{},
+		Error:  "Error on collect data",
 	}
 
 	result.Data.SMS = handler.obtainSMSData()
@@ -86,6 +86,18 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	result.Data.Email = handler.obtainEmailData()
 	result.Data.Billing = handler.billing.Read()
 	result.Data.Incidents = handler.incidents.Read()
+
+	if result.Data.SMS != nil &&
+		result.Data.MMS != nil &&
+		result.Data.VoiceCall != nil &&
+		result.Data.Email != nil &&
+		result.Data.Billing != nil &&
+		result.Data.Incidents != nil {
+		result.Status = true
+		result.Error = ""
+	} else {
+		result.Data = nil
+	}
 
 	handler.sendResponse(writer, result)
 }
