@@ -48,7 +48,7 @@ type SourceIncidents interface {
 }
 
 type SourceSupport interface {
-	Read() models.IncidentData
+	Read() models.SupportData
 }
 
 type Handler struct {
@@ -58,6 +58,7 @@ type Handler struct {
 	email     SourceEmail
 	billing   SourceBilling
 	incidents SourceIncidents
+	support   SourceSupport
 }
 
 func (handler *Handler) sendResponse(writer http.ResponseWriter, result *ResultT) {
@@ -90,13 +91,15 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	result.Data.Email = handler.obtainEmailData()
 	result.Data.Billing = handler.billing.Read()
 	result.Data.Incidents = handler.obtainIncidentData()
+	result.Data.Support = handler.obtainSupportData()
 
 	if result.Data.SMS != nil &&
 		result.Data.MMS != nil &&
 		result.Data.VoiceCall != nil &&
 		result.Data.Email != nil &&
 		result.Data.Billing != nil &&
-		result.Data.Incidents != nil {
+		result.Data.Incidents != nil &&
+		result.Data.Support != nil {
 		result.Status = true
 		result.Error = ""
 	} else {
@@ -106,7 +109,7 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	handler.sendResponse(writer, result)
 }
 
-func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall, email SourceEmail, billing SourceBilling, incidents SourceIncidents) *Handler {
+func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall, email SourceEmail, billing SourceBilling, incidents SourceIncidents, support SourceSupport) *Handler {
 	return &Handler{
 		sms:       sms,
 		mms:       mms,
@@ -114,5 +117,6 @@ func New(sms SourceSMS, mms SourceMMS, voiceCall SourceVoiceCall, email SourceEm
 		email:     email,
 		billing:   billing,
 		incidents: incidents,
+		support:   support,
 	}
 }
