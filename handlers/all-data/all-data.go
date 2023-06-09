@@ -47,6 +47,10 @@ type SourceIncidents interface {
 	Read() models.IncidentData
 }
 
+type SourceSupport interface {
+	Read() models.IncidentData
+}
+
 type Handler struct {
 	sms       SourceSMS
 	mms       SourceMMS
@@ -85,7 +89,7 @@ func (handler *Handler) ServeHTTP(writer http.ResponseWriter, request *http.Requ
 	result.Data.VoiceCall = handler.voiceCall.Read()
 	result.Data.Email = handler.obtainEmailData()
 	result.Data.Billing = handler.billing.Read()
-	result.Data.Incidents = handler.incidents.Read()
+	result.Data.Incidents = handler.obtainIncidentData()
 
 	if result.Data.SMS != nil &&
 		result.Data.MMS != nil &&

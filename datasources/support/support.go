@@ -14,15 +14,21 @@ type Support struct {
 	approvedTopics []string
 	url            string
 	client         http.Client
+	data           models.SupportData
 }
 
 func New(url string) *Support {
 	// url = "http://localhost:8383/support"
-	return &Support{
+	support := &Support{
 		approvedTopics: models.ApprovedTopics[:],
 		url:            url,
 		client:         http.Client{},
+		data:           nil,
 	}
+
+	support.data = support.Load()
+
+	return support
 }
 
 func (support *Support) Load() models.SupportData {
@@ -108,4 +114,14 @@ func (support *Support) convertRecordToSupportDatum(record *models.SupportDatum)
 	}
 
 	return result, nil
+}
+
+func (support *Support) Read() models.SupportData {
+	var data models.SupportData
+
+	for i := 0; i < len(support.data); i++ {
+		data[i] = support.data[i]
+	}
+
+	return data
 }
