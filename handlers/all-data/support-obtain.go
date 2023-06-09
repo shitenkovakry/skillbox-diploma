@@ -1,30 +1,71 @@
 package alldata
 
+import "skillbox-diploma/models"
+
+const (
+	supportIsNotOverloaded        = 9
+	supportIsModeratelyOverloaded = 16
+	supportNotLoaded              = 1
+	supportIsModeratelyLoaded     = 2
+	supportIsOverLoaded           = 3
+	averageTimeInMinutesPerTicket = 3
+)
+
 func (handler *Handler) obtainSupportData() []int {
 	support := handler.support.Read()
-	resultOfSupport := []int{}
-	supportNotLoaded := 1
-	supportIsModeratelyLoaded := 2
-	supportIsOverLoaded := 3
-	averageTimeInMinutesPerTicket := 3
+	rateOfLoadSupport := 0
+	responseTimeForANewTicket := 0
 
-	for index := 0; index < len(support); index++ {
+	arrayWithTickets := handler.moveNumbersOfTicketToAnotherArray(support)
+	averageCountOfTickets := handler.calculateAverageOfOpenTickets(arrayWithTickets)
+	summaOfOpenTickets := handler.calculateSummaOfOpenTickets(arrayWithTickets)
+
+	if averageCountOfTickets < supportIsNotOverloaded {
+		rateOfLoadSupport = supportNotLoaded
+	} else if averageCountOfTickets >= supportIsNotOverloaded &&
+		averageCountOfTickets < supportIsModeratelyOverloaded {
+		rateOfLoadSupport = supportIsModeratelyLoaded
+	} else if averageCountOfTickets > supportIsModeratelyOverloaded {
+		rateOfLoadSupport = supportIsOverLoaded
+	}
+
+	responseTimeForANewTicket = summaOfOpenTickets * averageTimeInMinutesPerTicket
+
+	return []int{rateOfLoadSupport, responseTimeForANewTicket}
+}
+
+func (handler *Handler) moveNumbersOfTicketToAnotherArray(support models.SupportData) []int {
+	lenOfSupport := len(support)
+	arrayWithMovedTickets := []int{}
+
+	for index := 0; index < lenOfSupport; index++ {
 		elementOfSupport := support[index]
 		numberOfOpenTickets := elementOfSupport.ActiveTickets
 
-		if elementOfSupport.ActiveTickets < 9 {
-			resultOfSupport = append(resultOfSupport, supportNotLoaded)
-		} else if elementOfSupport.ActiveTickets >= 9 && elementOfSupport.ActiveTickets < 16 {
-			resultOfSupport = append(resultOfSupport, supportIsModeratelyLoaded)
-		} else if elementOfSupport.ActiveTickets > 16 {
-			resultOfSupport = append(resultOfSupport, supportIsOverLoaded)
-		}
-
-		responseTimeForANewTicket := numberOfOpenTickets * averageTimeInMinutesPerTicket
-
-		resultOfSupport = append(resultOfSupport, responseTimeForANewTicket)
-
+		arrayWithMovedTickets = append(arrayWithMovedTickets, numberOfOpenTickets)
 	}
 
-	return resultOfSupport
+	return arrayWithMovedTickets
+}
+
+func (handler *Handler) calculateAverageOfOpenTickets(arrayWithTickets []int) int {
+	lenOfArrayWithTickets := len(arrayWithTickets)
+	summaOfTickets := handler.calculateSummaOfOpenTickets(arrayWithTickets)
+
+	averageOfOpenTickets := summaOfTickets / lenOfArrayWithTickets
+
+	return averageOfOpenTickets
+}
+
+func (handler *Handler) calculateSummaOfOpenTickets(arrayWithTickets []int) int {
+	lenOfArrayWithTickets := len(arrayWithTickets)
+	summaOfOpenTickets := 0
+
+	for index := 0; index < lenOfArrayWithTickets; index++ {
+		elementOfArray := arrayWithTickets[index]
+
+		summaOfOpenTickets += elementOfArray
+	}
+
+	return summaOfOpenTickets
 }
