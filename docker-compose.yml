@@ -8,17 +8,8 @@ services:
       - 8080:8080
     depends_on:
       - backend_skillbox
-    networks:
-      - diplom
 
   backend_skillbox:
     build:
       context: ./skillbox
       dockerfile: Dockerfile
-    ports:
-      - 8383:8383
-    networks:
-      - diplom
-
-networks:
-  diplom:

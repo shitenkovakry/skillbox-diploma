@@ -88,7 +88,7 @@ func convertRecordToSMSDatum(record []string) (*models.SMSDatum, error) {
 	}
 
 	result := &models.SMSDatum{
-		Country:      country.Alpha2(),
+		Country:      country.String(),
 		Bandwidth:    fmt.Sprint(bandwidth),
 		ResponseTime: fmt.Sprint(responseTime),
 		Provider:     provider,
@@ -102,9 +102,9 @@ type SMS struct {
 }
 
 func (sms *SMS) Read() models.SMSData {
-	var data models.SMSData
+	data := make(models.SMSData, len(sms.data))
 
-	for i := 0; i < len(sms.data); i++ {
+	for i := 0; i < len(data); i++ {
 		data[i] = sms.data[i]
 	}
 

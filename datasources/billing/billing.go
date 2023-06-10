@@ -73,7 +73,9 @@ type Billing struct {
 }
 
 func (billing *Billing) Read() *models.BillingDatum {
-	return billing.data
+	copyOfBilling := *billing.data
+
+	return &copyOfBilling
 }
 
 func New(path string) *Billing {

@@ -18,7 +18,6 @@ type Incident struct {
 }
 
 func New(url string) *Incident {
-	// url = "http://localhost:8383/incident"
 	incident := &Incident{
 		approvedStatusForIncident: models.ApprovedStatusForIncident[:],
 		url:                       url,
@@ -117,9 +116,9 @@ func (incident *Incident) convertRecordToIncidentDatum(record *models.IncidentDa
 }
 
 func (incident *Incident) Read() models.IncidentData {
-	var data models.IncidentData
+	data := make(models.IncidentData, len(incident.data))
 
-	for i := 0; i < len(incident.data); i++ {
+	for i := 0; i < len(data); i++ {
 		data[i] = incident.data[i]
 	}
 

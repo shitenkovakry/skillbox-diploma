@@ -23,7 +23,6 @@ type MMS struct {
 }
 
 func New(url string) *MMS {
-	// url = "http://localhost:8383/mms"
 	mms := &MMS{
 		approvedProviders: models.ApprovedProviders[:],
 		url:               url,
@@ -77,7 +76,7 @@ func (mms *MMS) convertRecordToMMSDatum(record *models.MMSDatum) (*models.MMSDat
 	}
 
 	result := &models.MMSDatum{
-		Country:      country.Alpha2(),
+		Country:      country.String(),
 		Bandwidth:    fmt.Sprint(bandwidth),
 		ResponseTime: fmt.Sprint(responseTime),
 		Provider:     provider,
@@ -142,9 +141,9 @@ func (mms *MMS) Parse(data io.Reader) (models.MMSData, error) {
 }
 
 func (mms *MMS) Read() models.MMSData {
-	var data models.MMSData
+	data := make(models.MMSData, len(mms.data))
 
-	for i := 0; i < len(mms.data); i++ {
+	for i := 0; i < len(data); i++ {
 		data[i] = mms.data[i]
 	}
 

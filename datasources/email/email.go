@@ -91,9 +91,9 @@ type Email struct {
 }
 
 func (email *Email) Read() models.EmailData {
-	var data models.EmailData
+	data := make(models.EmailData, len(email.data))
 
-	for i := 0; i < len(email.data); i++ {
+	for i := 0; i < len(data); i++ {
 		data[i] = email.data[i]
 	}
 

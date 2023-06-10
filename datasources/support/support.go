@@ -117,9 +117,9 @@ func (support *Support) convertRecordToSupportDatum(record *models.SupportDatum)
 }
 
 func (support *Support) Read() models.SupportData {
-	var data models.SupportData
+	data := make(models.SupportData, len(support.data))
 
-	for i := 0; i < len(support.data); i++ {
+	for i := 0; i < len(data); i++ {
 		data[i] = support.data[i]
 	}
 

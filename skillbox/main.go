@@ -467,7 +467,7 @@ func listenAndServeHTTP() {
 	router.HandleFunc("/accendent", handleAccendent)
 	router.HandleFunc("/test", handleTest).Methods("GET", "OPTIONS")
 
-	http.ListenAndServe("localhost:8383", router)
+	http.ListenAndServe(":8383", router)
 }
 
 func handleMMS(w http.ResponseWriter, r *http.Request) {
