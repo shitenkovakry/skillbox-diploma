@@ -11,6 +11,7 @@ import (
 	"skillbox-diploma/datasources/support"
 	voicecall "skillbox-diploma/datasources/voice-call"
 	alldata "skillbox-diploma/handlers/all-data"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -20,13 +21,17 @@ const (
 )
 
 func main() {
+	log.Println("wait five seconds while backend-skillbox is loading")
+	time.Sleep(time.Second * 5)
+	log.Println("enough... I'm going to load")
+
 	router := chi.NewRouter()
 
-	smsSource := sms.New("../../skillbox/sms.data")
+	smsSource := sms.New("./skillbox/sms.data")
 	mmsSource := mms.New("http://localhost:8383/mms")
-	voiceCallSource := voicecall.New("../../skillbox/voice.data")
-	emailSource := email.New("../../skillbox/email.data")
-	billingSource := billing.New("../../skillbox/billing.data")
+	voiceCallSource := voicecall.New("./skillbox/voice.data")
+	emailSource := email.New("./skillbox/email.data")
+	billingSource := billing.New("./skillbox/billing.data")
 	incidentSource := incident.New("http://localhost:8383/incident")
 	supportSource := support.New("http://localhost:8383/support")
 
