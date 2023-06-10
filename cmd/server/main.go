@@ -27,7 +27,7 @@ func main() {
 	voiceCallSource := voicecall.New("./skillbox/voice.data")
 	emailSource := email.New("./skillbox/email.data")
 	billingSource := billing.New("./skillbox/billing.data")
-	incidentSource := incident.New("http://backend_skillbox:8383/incident")
+	incidentSource := incident.New("http://backend_skillbox:8383/accendent")
 	supportSource := support.New("http://backend_skillbox:8383/support")
 
 	handlerForAllData := alldata.New(smsSource, mmsSource, voiceCallSource, emailSource, billingSource, incidentSource, supportSource)
