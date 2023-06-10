@@ -2,12 +2,13 @@ package support
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"log"
 	"net/http"
 	"skillbox-diploma/models"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 type Support struct {
@@ -105,7 +106,7 @@ func (support *Support) convertRecordToSupportDatum(record *models.SupportDatum)
 	}
 
 	if !found {
-		return nil, errors.New("topic not found in approved topics")
+		return nil, errors.Wrapf(errors.New("topic not found in approved topics"), "topic = %s", topic)
 	}
 
 	result := &models.SupportDatum{
